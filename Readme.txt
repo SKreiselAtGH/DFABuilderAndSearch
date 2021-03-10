@@ -1,2 +1,2 @@
 javac SubstringMatching.java
-java SubstringMatching
+java SubstringMatching -textfilename-
