@@ -1,0 +1,2 @@
+javac SubstringMatching.java
+java SubstringMatching
