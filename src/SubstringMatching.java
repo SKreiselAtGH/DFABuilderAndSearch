@@ -98,7 +98,6 @@ public class SubstringMatching {
             while (j < uniqueChars.length()) {
               if (uniqueChars.charAt(j) == pattern.charAt(i)) {
                     dfa[j][i] = i + 1;
-                    break;
                 } else {
                    dfa[j][i] = findLast(j, i, dfa);
                 }
@@ -116,17 +115,44 @@ public class SubstringMatching {
         return dfa;
     }
 
+
     public static Integer findLast(int input, int currentState, int[][] dfa) {
-            int lastState;
-            int updatedState;
-            if (currentState < 2 ) {
-                updatedState = 0;
+        int lastState = 0;
+        int updatedState;
+
+        if (currentState < 2 ) {
+            updatedState = 0;
+        } else {
+            updatedState = currentState - 1;
+        }
+        if (currentState < pattern.length()) {
+            currentState = currentState + 1;
+        }
+        String sub = pattern.substring(0,currentState);
+        String check = pattern.substring(updatedState, currentState); // check against sub
+        int initCheckLen = check.length();
+        if (currentState > 2) {
+                check =  check.substring(0, initCheckLen - 1) + uniqueChars.charAt(input);
+        }
+        boolean cont = sub.contains(check);
+        if (cont) {
+            if (currentState > 2){
+                check =  sub.substring(2, sub.length() - 1) + uniqueChars.charAt(input);
+                if (sub.contains(check)) { // if sub contains a lookback version
+                lastState = sub.lastIndexOf(uniqueChars.charAt(input)); // return the last index
             } else {
-                updatedState = currentState - 2;
+                lastState = sub.indexOf(uniqueChars.charAt(input)); // else return the first index
             }
-                String sub = pattern.substring(0,currentState);
-                String check = pattern.substring(updatedState, currentState);
-                lastState = sub.lastIndexOf(check);
+            } else {
+                lastState = sub.lastIndexOf(uniqueChars.charAt(input));
+            }
+
+            if (lastState == -1) {
+                lastState = 0;
+            }
+        } else { // if sub does not contain value then return 0
+            lastState = 0;
+        }
 
         return dfa[input][lastState];
     }
